@@ -6,11 +6,30 @@ const INITIAL_FORM = {
   id: null,
 };
 
-const CrudForm = () => {
+const CrudForm = ({ createData, updateData, dataToEdit, setDataToEdit }) => {
   const [form, setForm] = useState(INITIAL_FORM);
-  const handleChange = e => {};
-  const handleSubmit = e => {};
-  const handleReset = e => {};
+  const handleChange = e => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if (!form.name || !form.constellation) {
+      alert("Datos incompletos");
+      return;
+    }
+
+    if (form.id === null) {
+      createData(form);
+    } else {
+      updateData(form);
+    }
+    handleReset();
+  };
+  const handleReset = e => {
+    setForm(INITIAL_FORM);
+    setDataToEdit(null);
+  };
   return (
     <div>
       <h3>Agregar</h3>
