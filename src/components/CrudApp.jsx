@@ -45,6 +45,12 @@ const CrudApp = () => {
   };
 
   const deleteData = id => {
+    const canDelete = window.confirm(
+      "Esta seguro de borrar este post, esta accion no puede ser deshecha."
+    );
+    if (!canDelete) {
+      return;
+    }
     const newData = db.filter(el => el.id !== id);
     setDb(newData);
   };
@@ -52,17 +58,19 @@ const CrudApp = () => {
   return (
     <div>
       <h2>CRUD App</h2>
-      <CrudForm
-        createData={createData}
-        updateData={updateData}
-        dataToEdit={dataToEdit}
-        setDataToEdit={setDataToEdit}
-      />
-      <CrudTable
-        data={db}
-        setDataToEdit={setDataToEdit}
-        deleteData={deleteData}
-      />
+      <article className="grid-1-2">
+        <CrudForm
+          createData={createData}
+          updateData={updateData}
+          dataToEdit={dataToEdit}
+          setDataToEdit={setDataToEdit}
+        />
+        <CrudTable
+          data={db}
+          setDataToEdit={setDataToEdit}
+          deleteData={deleteData}
+        />
+      </article>
     </div>
   );
 };
