@@ -9,11 +9,14 @@ const CrudApi = () => {
 
   let api = helpHttp();
   let url = "http://localhost:3000/santos";
-
   useEffect(() => {
     api.get(url).then((res) => {
-      console.log("aqui");
       console.log(res);
+      if (!res.err) {
+        setDb(res);
+      } else {
+        setDb([]);
+      }
     });
   }, []);
 
