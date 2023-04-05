@@ -12,11 +12,10 @@ const CrudApi = () => {
   const [loading, setLoading] = useState(false);
 
   let api = helpHttp();
-  let url = "http://localhost:3000/sanos";
+  let url = "http://localhost:3000/santos";
   useEffect(() => {
     setLoading(true);
     api.get(url).then((res) => {
-      console.log(res);
       if (!res.err) {
         setDb(res);
         setError(null);
@@ -30,12 +29,37 @@ const CrudApi = () => {
 
   const createData = (data) => {
     data.id = Date.now();
-    setDb([...db, data]);
+    let options = {
+      body: data,
+      headers: { "content-type": "application/json" },
+    };
+    api.post(url, options).then((res) => {
+      console.log(res);
+      if (!res.err) {
+        setDb([...db, res]);
+      } else {
+        setError(res);
+      }
+    });
   };
 
   const updateData = (data) => {
-    let newData = db.map((el) => (el.id === data.id ? data : el));
-    setDb(newData);
+    let endpoint = `${url}/${data.id}`;
+
+    let options = {
+      body: data,
+      headers: { "content-type": "application/json" },
+    };
+    api.put(endpoint, options).then((res) => {
+      if (!res.err) {
+        let newData = db.map((el) => (el.id === data.id ? data : el));
+        setDb(newData);
+      } else {
+        setError(res);
+      }
+    });
+    /*     let newData = db.map((el) => (el.id === data.id ? data : el));
+    setDb(newData); */
   };
 
   const deleteData = (id) => {
@@ -45,8 +69,19 @@ const CrudApi = () => {
     if (!canDelete) {
       return;
     }
-    const newData = db.filter((el) => el.id !== id);
-    setDb(newData);
+    let endpoint = `${url}/${id}`;
+
+    let options = {
+      headers: { "content-type": "application/json" },
+    };
+    api.del(endpoint, options).then((res) => {
+      if (!res.err) {
+        const newData = db.filter((el) => el.id !== id);
+        setDb(newData);
+      } else {
+        setError(res);
+      }
+    });
   };
 
   return (
